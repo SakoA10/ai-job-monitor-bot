@@ -36,7 +36,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const jobs = $input.all();\n\nconst relevant = jobs.filter(item => {\n  const tags = item.json.tags || [];\n  const position = (item.json.position || '').toLowerCase();\n  \n  const keywords = ['ai', 'automation', 'python', 'n8n', 'machine learning', \n                    'backend', 'developer', 'engineer', 'remote'];\n  \n  return keywords.some(k => \n    position.includes(k) || tags.some(t => t.toLowerCase().includes(k))\n  );\n});\n\nreturn relevant.slice(0, 5).map(item => ({\n  json: {\n    position: item.json.position,\n    company: item.json.company,\n    tags: item.json.tags,\n    url: `https://remoteok.com/remote-jobs/${item.json.slug}`\n  }\n}));"
+        "jsCode": "const jobs = $input.all();\n\nconst relevant = jobs.filter(item => {\n  const tags = item.json.tags || [];\n  const position = (item.json.position || '').toLowerCase();\n  \n  const keywords = ['ai', 'automation', 'python', 'n8n', 'machine learning',\n                    'backend', 'developer', 'engineer'];\n  \n  const excluded = ['senior', 'lead', 'manager', 'director', \n                    'head', 'principal', 'staff', 'vp', 'chief'];\n  \n  const isRelevant = keywords.some(k =>\n    position.includes(k) || tags.some(t => t.toLowerCase().includes(k))\n  );\n  \n  const isTooSenior = excluded.some(e => position.includes(e));\n  \n  return isRelevant && !isTooSenior;\n});\n\nreturn relevant.slice(0, 5).map(item => ({\n  json: {\n    position: item.json.position,\n    company: item.json.company,\n    tags: item.json.tags,\n    url: `https://remoteok.com/remote-jobs/${item.json.slug}`\n  }\n}));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -50,7 +50,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=You are a job matching assistant.\n\nHere is a job listing:\nPosition: {{ $json.position }}\nCompany: {{ $json.company }}\nTags: {{ $json.tags.join(', ') }}\n\nScore this job for someone with these skills: n8n automation, AI workflows, Python basics, FastAPI, remote work only.\n\nReply with STRICT JSON ONLY:\n{\n  \"score\": \"✅ Great fit\" or \"👀 Maybe\" or \"❌ Skip\",\n  \"reason\": \"One sentence explanation\"\n}",
+        "text": "=You are a job matching assistant.\n\nHere is a job listing:\nPosition: {{ $json.position }}\nCompany: {{ $json.company }}\nTags: {{ $json.tags.join(', ') }}\n\nScore this job for a junior developer with these skills: \nn8n automation, AI workflows, Python basics, FastAPI, remote work only.\n\nIMPORTANT RULES:\n- If the role is sales, marketing, recruiting, HR, finance, or non-technical → always ❌ Skip\n- If the role requires 3+ years experience → always ❌ Skip\n- Only score ✅ Great fit if it's a technical junior/entry role matching the skills above\n\nReply with STRICT JSON ONLY:\n{\n  \"score\": \"✅ Great fit\" or \"👀 Maybe\" or \"❌ Skip\",\n  \"reason\": \"One sentence explanation\"\n}",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -283,7 +283,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "7ff159fa-59f2-45f6-8da0-d92e4d85bb62",
+  "versionId": "11440ada-cd9d-4a80-a166-0e81cf6a3e9d",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "41e039cedb3a36a88c7cb06e1c01ecdba11906eba63c30992aded5ab7e47dc72"
