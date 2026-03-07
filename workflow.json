@@ -90,8 +90,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        544,
-        -32
+        640,
+        -224
       ],
       "id": "296df221-969e-46d4-9650-86a0b4f9251d",
       "name": "Send a text message",
@@ -195,8 +195,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        752,
-        -32
+        848,
+        -224
       ],
       "id": "a3ff96fa-526f-4b3b-baaf-f41fe0e6b74a",
       "name": "Append row in sheet",
@@ -206,6 +206,39 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a78d7fca-216a-4c58-a8ab-b1e3c94621c2",
+              "leftValue": "={{ JSON.parse($json.text.replace(/```json|```/g, '').trim()).score }}",
+              "rightValue": "❌",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        -32
+      ],
+      "id": "34985868-cdf9-4797-84f2-9b8fcd33d384",
+      "name": "If"
     }
   ],
   "pinData": {},
@@ -258,7 +291,7 @@
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -275,6 +308,24 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -283,7 +334,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "11440ada-cd9d-4a80-a166-0e81cf6a3e9d",
+  "versionId": "2b5b4dd7-c41b-4491-a29b-d10639adf402",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "41e039cedb3a36a88c7cb06e1c01ecdba11906eba63c30992aded5ab7e47dc72"

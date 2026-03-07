@@ -1,13 +1,12 @@
 # AI Job Monitor Bot
 
-Automatically finds remote AI/automation jobs every morning,
-scores them with AI, and sends all scored results to Telegram.
+Automatically finds remote AI/automation jobs every morning, scores them with AI, and sends only the best matches to Telegram.
 
 ## Flow
 
 Runs daily at 9AM → fetches jobs from RemoteOK → filters by keywords →
 AI scores each job as ✅ Great fit / 👀 Maybe / ❌ Skip →
-sends all scored jobs to Telegram → logs everything to Google Sheets
+only ✅ and 👀 jobs sent to Telegram → all results logged to Google Sheets
 
 ## Screenshots
 
